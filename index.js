@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import Express from 'express';
 
-import {dbConnection, sequelize} from "./DB/connections.js"
+import {dbConnection, sequelize} from "./DB/db_connection.js"
 import {router as apiRouter} from "./SRC/Routers/index.router.js";
 import {ApiError} from "./SRC/Utillis/apiErrors.js";
 import globalErrorHandle from "./SRC/Middlewares/globalErrorHandle.middleware.js";
