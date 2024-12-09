@@ -5,7 +5,8 @@ export const paginate = async (request, Model, defualtPage = 1, defualtPageSize 
     // number of records
     const numOfRecords = await Model.count();
     // get maximum number of pages
-    const maxPage = Math.ceil(numOfRecords / limit);
+    const maxPage = Math.ceil(numOfRecords / limit) || 0;
+
 
     // check if page, limit is found
     if(!page){
