@@ -2,6 +2,7 @@ import {UserModel} from "../../DB/Models/user.model.js";
 
 import {hashPassword, verifyPassword} from "../Utillis/hashPassword.js";
 import {getAll_Response} from "../Utillis/defaultResponses.js";
+import {generateUserToken} from "../Utillis/userToken.js";
 
 
 export const getAllUsers = async (req, res) => {
@@ -78,7 +79,8 @@ export const login = async (req, res, next) => {
             return res.status(400).json({"error": "not valid password"});   
         }
         else{
-            return res.status(200).json({"data": "user login successfully"});
+            const token = generateUserToken(email, password);
+            return res.status(200).json({"data": "user login successfully", token});
         }
     }
 } 
