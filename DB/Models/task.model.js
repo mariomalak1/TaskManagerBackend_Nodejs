@@ -3,7 +3,7 @@ import {DataTypes} from "sequelize";
 import {sequelize} from "../db_connection.js"; 
 
 
-const TaskModel = sequelize.define("Task", {
+export const TaskModel = sequelize.define("Task", {
     title: {
         type: DataTypes.STRING,
         allowNull: false,
