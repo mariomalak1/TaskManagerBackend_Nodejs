@@ -60,23 +60,25 @@ export const login = async (req, res, next) => {
         return res.status(400).json({"error": "missed some required data"});
     }
 
-    const user = await UserModel.findAll({
+    const user = await UserModel.findOne({
         where:{
             "email": email,
         }}
     );
 
-    if(user.length <= 0){
+    if(!user){
         return res.status(400).json({"error": "no email for this user"});
     }
 
     else{
         // verfiy passsword
-        if (verifyPassword(password, user.password)){
-            return res.status(200).json({"data": "user login successfully"});
+
+        const isPasswordValid = await verifyPassword(password, user.password);
+        if (!isPasswordValid){
+            return res.status(400).json({"error": "not valid password"});   
         }
         else{
-            return res.status(400).json({"error": "not valid password"});   
+            return res.status(200).json({"data": "user login successfully"});
         }
     }
 } 

@@ -5,9 +5,8 @@ import {getAllUsers, createNewUser, login, getUserWithId} from "../Controllers/u
 export const router = Router();
 
 // authentication
-router.route("/authenticate")
-        .post(createNewUser)
-        .post(login);
+router.post("/login/", login);
+router.post("/register/", createNewUser);
 
 
 router.route("/")
