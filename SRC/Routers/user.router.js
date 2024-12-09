@@ -9,9 +9,8 @@ export const router = Router();
 router.post("/login/", login);
 router.post("/register/", createNewUser);
 
-
 router.route("/")
-        .get(verifyToken, getAllUsers);
+        .get(getAllUsers);
 
 router.route("/:id")
         .get(getUserWithId);

@@ -1,7 +1,8 @@
 import {Router} from "express";
 
-import {getAllTasks} from "../Controllers/task.controller.js";
+import {getAllTasksForUser} from "../Controllers/task.controller.js";
+import {verifyToken} from "../Utillis/userToken.js";
 
 export const router = Router();
 
-router.route("/").get(getAllTasks);
+router.route("/").get(verifyToken, getAllTasksForUser);

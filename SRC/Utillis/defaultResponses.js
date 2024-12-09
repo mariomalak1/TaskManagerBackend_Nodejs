@@ -1,8 +1,14 @@
 import {paginate} from "../Utillis/paginationForModel.js";
 
-export const getAll_Response = async (req, res, Model, needNumOfRecords = false, maxNumOfPage = false) => {
+export const getAll_Response = async (req, res, Model, needNumOfAllRecords = false, needMaxNumOfPage = false) => {
     const paginator = await paginate(req, Model);
     
+    const response = responseObjWithPaginator(paginator, needNumOfAllRecords, needMaxNumOfPage);
+
+    return res.status(200).json(response);
+}
+
+export const responseObjWithPaginator = (paginator, needNumOfAllRecords = false, needMaxNumOfPage = false) => {
     const response = {
         meta: {
             count: paginator.data.length,
@@ -12,13 +18,13 @@ export const getAll_Response = async (req, res, Model, needNumOfRecords = false,
         data: paginator.data
     }
 
-    if(needNumOfRecords){
+    if(needNumOfAllRecords){
         response.meta.numberOfRecords = numberOfRecords;
     }
     
-    if(maxNumOfPage){
+    if(needMaxNumOfPage){
         response.meta.maxPage = paginator.maxPage;
     }
 
-    return res.status(200).json(response);
+    return response;
 }

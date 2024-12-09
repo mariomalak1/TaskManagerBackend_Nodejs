@@ -1,7 +1,7 @@
 import {DataTypes} from "sequelize";
 
 import {sequelize} from "../db_connection.js"; 
-
+import {UserModel} from "./user.model.js";
 
 export const TaskModel = sequelize.define("Task", {
     title: {
@@ -26,3 +26,13 @@ export const TaskModel = sequelize.define("Task", {
         allowNull: true,
     }
 });
+
+TaskModel.belongsTo(UserModel, {
+    onDelete: 'CASCADE',
+    onUpdate: 'RESTRICT',
+    foreignKey: {
+        allowNull: false
+    }
+});
+
+UserModel.hasMany(TaskModel);

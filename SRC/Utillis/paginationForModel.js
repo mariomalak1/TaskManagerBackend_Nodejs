@@ -1,4 +1,4 @@
-export const paginate = async (request, Model, defualtPage = 1, defualtPageSize = 10) => {   
+export const paginate = async (request, Model, whereClues = null, defualtPage = 1, defualtPageSize = 10) => {
     let {page, limit} = request.query;
     let offset;
 
@@ -51,6 +51,7 @@ export const paginate = async (request, Model, defualtPage = 1, defualtPageSize 
 
     const records = await Model.findAll(
     {
+        where: whereClues || 1,
         offset,
         limit
     });

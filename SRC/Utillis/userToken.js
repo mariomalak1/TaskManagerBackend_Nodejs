@@ -32,5 +32,7 @@ export const verifyToken = (req, res, next) => {
     if(decoded.password !== user.password)
         return res.status(403).json({"error": "try to login agian"});
 
+    // set user in req
+    req.user = user; 
     next();
 }
