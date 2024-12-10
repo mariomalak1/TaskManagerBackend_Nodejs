@@ -6,7 +6,7 @@ dotenv.config({path: "config.env"})
 export const sequelize = new Sequelize(
     "task_manager_backend_nodejs",
     "root",
-    "mario@mysql123",
+    "",
     {
         host: "localhost",
         dialect: "mysql"
@@ -15,7 +15,7 @@ export const sequelize = new Sequelize(
 
 export const dbConnection = async () => {
     try {
-        await sequelize.authenticate();
+        await sequelize.sync();
         console.log('Connection has been established successfully.');
     }
     catch (error) {
