@@ -5,12 +5,26 @@ import {dbConnection, sequelize} from "./DB/db_connection.js"
 import {router as apiRouter} from "./SRC/Routers/index.router.js";
 import {ApiError} from "./SRC/Utillis/apiErrors.js";
 import globalErrorHandle from "./SRC/Middlewares/globalErrorHandle.middleware.js";
+import cors from 'cors';
 
 
 dotenv.config({path: "config.env"});
 
 const app = Express();
 
+const corsOptions = {
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // Allow all origins
+      callback(null, true);
+    },
+    credentials: true, // Allow credentials
+  };
+  
+  app.use(cors(corsOptions));
+  
 app.use(Express.json());
 
 const PORT = process.env.PORT || 3000;
