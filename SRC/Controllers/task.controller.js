@@ -64,7 +64,7 @@ export const updateTask = async (req, res, next) => {
         task.status = req.body.status;
 
         // change complete time 
-        if(req.status === 1){
+        if(req.body.status == 1){
             task.completeTime = new Date();
         }
     }
@@ -94,3 +94,21 @@ export const deleteTask = async (req, res, next) => {
 
     return res.status(204).json({data: task});
 }
+
+
+export const numberOfComUnComTasks = async (req, res, next) => {
+    const numOfUnCompletedTasks = await TaskModel.findAll({
+        where: {
+            status: 0
+        }
+    });
+    
+    const numOfCompletedTasks = await TaskModel.findAll({
+        where: {
+            status: 1
+        }
+    });
+
+    return res.status(200).json({data: {"numOfCompletedTasks": numOfCompletedTasks.length, "numOfUnCompletedTasks": numOfUnCompletedTasks.length}});
+}
+
