@@ -47,3 +47,32 @@ export const createTask = async (req, res, next) => {
     });
 }
 
+export const updateTask = async (req, res, next) => {
+    const {id} = req.params;
+
+    let task = await TaskModel.findByPk(id);
+
+    if(!task){
+        return res.sendStatus(404);
+    }
+
+    if(req.status !== null){
+        if(req.status > 1 || req.status < 0){
+            return res.status(400).json({"error": "status must be 0 or 1"});
+        }
+    
+        task.status = req.body.status;
+
+        // change complete time 
+        if(req.status === 1){
+            task.completeTime = new Date();
+        }
+    }
+
+    task.title = req.body.title || task.title;
+
+    task.save();
+
+    return res.status(200).json({data: task});
+}
+
