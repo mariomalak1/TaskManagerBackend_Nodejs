@@ -17,8 +17,7 @@ export const TaskModel = sequelize.define("Task", {
 
     status:{
         type: DataTypes.BOOLEAN,
-        default: false,
-        allowNull: false,
+        defaultValue: false,
     },
 
     completeTime: {
