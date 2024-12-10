@@ -79,7 +79,7 @@ export const login = async (req, res, next) => {
             return res.status(400).json({"error": "not valid password"});   
         }
         else{
-            const token = generateUserToken(email, password);
+            const token = generateUserToken(email, user.password);
             return res.status(200).json({"data": "user login successfully", token});
         }
     }
