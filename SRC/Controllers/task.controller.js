@@ -76,3 +76,21 @@ export const updateTask = async (req, res, next) => {
     return res.status(200).json({data: task});
 }
 
+
+export const deleteTask = async (req, res, next) => {
+    const {id} = req.params;
+
+    if (!id) {
+        return next(new ApiError("must provide task id", 400))
+    }
+
+    const task = await TaskModel.findByPk(id);
+    
+    if(!task){
+        return res.sendStatus(404);
+    }
+
+    await task.destroy();
+
+    return res.status(204).json({data: task});
+}
