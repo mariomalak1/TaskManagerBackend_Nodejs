@@ -5,8 +5,8 @@ import {ApiError} from "./apiErrors.js";
 import {UserModel} from "../../DB/Models/user.model.js";
 import {verifyPassword} from "../Utillis/hashPassword.js";
 
-export const generateUserToken = (email, pass) => {
-    return jwt.sign({email, pass}, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRATION_TIME });
+export const generateUserToken = (email, id) => {
+    return jwt.sign({email, id}, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRATION_TIME });
 }
 
 export const verifyToken = async (req, res, next) => {

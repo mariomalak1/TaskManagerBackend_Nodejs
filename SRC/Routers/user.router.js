@@ -6,11 +6,11 @@ import {verifyToken} from "../Utillis/userToken.js";
 export const router = Router();
 
 // authentication
-router.post("/login/", login);
-router.post("/register/", createNewUser);
+router.post("/login", login);
+router.post("/register", createNewUser);
 
-router.route("/")
+router.route("/all-users")
         .get(getAllUsers);
 
-router.route("/:id")
+router.route("/")
         .get(getUserWithId);
