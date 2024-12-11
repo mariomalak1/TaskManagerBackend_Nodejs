@@ -4,6 +4,10 @@ import {sequelize} from "../db_connection.js";
 import {UserModel} from "./user.model.js";
 
 export const TaskModel = sequelize.define("Task", {
+    id:{
+        type: DataTypes.STRING,
+        primaryKey: true,
+    },
     title: {
         type: DataTypes.STRING,
         allowNull: false,
