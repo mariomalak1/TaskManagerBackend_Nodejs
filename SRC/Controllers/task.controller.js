@@ -1,168 +1,178 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 
-import {TaskModel} from "../../DB/Models/task.model.js";
-import {responseObjWithPaginator} from "../Utillis/defaultResponses.js";
-import {paginate} from "../Utillis/paginationForModel.js";
-import {ApiError} from "../Utillis/apiErrors.js";
+import { TaskModel } from "../../DB/Models/task.model.js";
+import { responseObjWithPaginator } from "../Utillis/defaultResponses.js";
+import { paginate } from "../Utillis/paginationForModel.js";
+import { ApiError } from "../Utillis/apiErrors.js";
+import { nanoid } from "nanoid";
 
 export const getAllTasksForUser = async (req, res) => {
-    // where clue that will put it in model     
-    const whereClue = {
-        UserId: req.user.id
-    }
-    
-    const tasks = await paginate(req, TaskModel, whereClue);
-    const response = responseObjWithPaginator(tasks);
+  // where clue that will put it in model
+  const whereClue = {
+    UserId: req.user.id,
+  };
 
-    return res.status(200).json(response);
-}
+  const tasks = await TaskModel.findAll({
+    where: whereClue,
+    attributes: ["id", "title", "status", "completeTime", "createdAt"],
+  });
+
+  return res.status(200).json({
+    numOfTasks: tasks.length,
+    data: tasks,
+  });
+};
 
 // @params  id -required
 export const getTaskWithId = async (req, res, next) => {
-    const {id} = req.params;
+  const { id } = req.params;
 
-    if (!id) {
-        return next(new ApiError("must provide task id", 400))
-    }
+  if (!id) {
+    return next(new ApiError("must provide task id", 400));
+  }
 
-    const task = await TaskModel.findByPk(id);
-    
-    if(!task){
-        return res.sendStatus(404);
-    }
+  const task = await TaskModel.findByPk(id);
 
-    return res.status(200).json({data: task});
-}
+  if (!task) {
+    return res.sendStatus(404);
+  }
 
+  return res.status(200).json({ data: task });
+};
 
 export const createTask = async (req, res, next) => {
-    const {title} = req.body;
+  const { title } = req.body;
 
-    if(!title){
-        return res.status(400).json({"error": "must provide title"});
-    }
-    
-    const task = await TaskModel.create({title, UserId: req.user.id});
+  if (!title) {
+    return res.status(400).json({ error: "must provide title" });
+  }
+  const id = nanoid(8);
 
-    return res.status(200).json({
-        data: task
-    });
-}
+  const task = await TaskModel.create({ id, title, UserId: req.user.id });
+
+  return res.status(200).json({
+    data: task,
+  });
+};
 
 export const updateTask = async (req, res, next) => {
-    const {id} = req.params;
+  const { id } = req.params;
 
-    let task = await TaskModel.findByPk(id);
+  let task = await TaskModel.findByPk(id);
 
-    if(!task){
-        return res.sendStatus(404);
+  if (!task) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
+  if (req.status !== null) {
+    if (req.status > 1 || req.status < 0) {
+      return res.status(400).json({ error: "status must be 0 or 1" });
     }
 
-    if(req.status !== null){
-        if(req.status > 1 || req.status < 0){
-            return res.status(400).json({"error": "status must be 0 or 1"});
-        }
-    
-        task.status = req.body.status;
+    task.status = req.body.status;
 
-        // change complete time 
-        if(req.body.status == 1){
-            task.completeTime = new Date();
-        }
+    if (req.body.status == 0) {
+      task.completeTime = null;
     }
 
-    task.title = req.body.title || task.title;
+    // change complete time
+    if (req.body.status == 1) {
+      task.completeTime = new Date();
+    }
+  }
 
-    task.save();
+  task.title = req.body.title || task.title;
 
-    return res.status(200).json({data: task});
-}
+  task.save();
 
+  return res.status(200).json({ data: task });
+};
 
 export const deleteTask = async (req, res, next) => {
-    const {id} = req.params;
+  const { id } = req.params;
 
-    if (!id) {
-        return next(new ApiError("must provide task id", 400))
-    }
+  if (!id) {
+    return next(new ApiError("must provide task id", 400));
+  }
 
-    const task = await TaskModel.findByPk(id);
-    
-    if(!task){
-        return res.sendStatus(404);
-    }
+  const task = await TaskModel.findByPk(id);
 
-    await task.destroy();
+  if (!task) {
+    return res.sendStatus(404);
+  }
 
-    return res.status(204).json({data: task});
-}
+  await task.destroy();
 
+  res.status(200).json({ message: "Task deleted successfully" });
+};
 
 export const numberOfComUnComTasks = async (req, res, next) => {
-    const numOfUnCompletedTasks = await TaskModel.findAll({
-        where: {
-            status: 0
-        }
-    });
-    
-    const numOfCompletedTasks = await TaskModel.findAll({
-        where: {
-            status: 1
-        }
-    });
+  const numOfUnCompletedTasks = await TaskModel.findAll({
+    where: {
+      status: 0,
+    },
+  });
 
-    return res.status(200).json({data: {"numOfCompletedTasks": numOfCompletedTasks.length, "numOfUnCompletedTasks": numOfUnCompletedTasks.length}});
-}
+  const numOfCompletedTasks = await TaskModel.findAll({
+    where: {
+      status: 1,
+    },
+  });
+
+  return res
+    .status(200)
+    .json({
+      data: {
+        numOfCompletedTasks: numOfCompletedTasks.length,
+        numOfUnCompletedTasks: numOfUnCompletedTasks.length,
+      },
+    });
+};
 
 export const numberOfTasksCompeletedPerDayInMonth = async (req, res, next) => {
-    let {month} = req.query;
-    
-    if(!month){
-        return res.status(400).json({"error": "must provide month number"});
-    }
+  const { month } = req.query;
 
-    if(Number.isNaN(month) && (month > 11 || month < 0)){
-        return res.status(400).json({"error": "must provide valid month number"});
-    }
+  // Validate month input
+  if (!month || isNaN(month) || month < 1 || month > 12) {
+    return res.status(400).json({ error: "Must provide a valid month (1-12)" });
+  }
 
-    const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
+  const requestedMonth = parseInt(month) - 1; // Convert to 0-indexed month
 
-    month -= 1;
-    
-    let greaterThanData, smallerThanData;
+  // Define date range for the query
+  const startOfMonth = new Date(currentYear, requestedMonth, 1);
+  const endOfMonth = new Date(currentYear, requestedMonth + 1, 1); 
+  console.log(startOfMonth, endOfMonth);
 
-    if(month == 0){
-        greaterThanData = new Date(currentYear - 1, 11, 1);
-    }else{
-        greaterThanData = new Date(currentYear, month, 1);
-
-    }
-
-    if(month == 11){
-        smallerThanData = new Date(currentYear + 1, 0, 1);        
-    }else{
-        smallerThanData = new Date(currentYear, month, 1);
-    }
-
-
+  try {
+    // Fetch completed tasks within the specified range
     const tasks = await TaskModel.findAll({
-        where: {
-            status: 1,
-            completeTime: {
-                [Op.gte]: greaterThanData,
-                [Op.lt]: smallerThanData,
-            }
-        }
+      where: {
+        status: 1, // Completed tasks
+        completeTime: {
+          [Op.gte]: startOfMonth,
+          [Op.lt]: endOfMonth,
+        },
+      },
     });
 
-    const numOfDaysInMonth = new Date(currentYear, 5, 0).getDate();
+    // Determine number of days in the month
+    const daysInMonth = new Date(currentYear, requestedMonth + 1, 0).getDate();
 
-    const tasksPerDay = {};
+    // Aggregate tasks per day
+    const tasksPerDay = Array.from({ length: daysInMonth }, (_, dayIndex) => {
+      const day = dayIndex + 1;
+      const taskCount = tasks.filter(
+        (task) => task.completeTime.getDate() === day
+      ).length;
+      return { day, taskCount };
+    });
 
-    for (let i = 1; i < numOfDaysInMonth; i++) {
-        tasksPerDay[`day_${i}`] = tasks.filter((task) => task.completeTime.getDate() === i);        
-    }
-
-    return res.status(200).json({data: {tasksPerDay}});
-}
+    return res.status(200).json({ data: { tasksPerDay } });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 

@@ -17,5 +17,5 @@ router.route("/:id")
     .put(verifyToken, updateTask)
     .delete(verifyToken, deleteTask);
 
-router.get("/statistics/num/", verifyToken, numberOfComUnComTasks)
-router.get("/statistics/nTasksInMonth/", verifyToken, numberOfTasksCompeletedPerDayInMonth)
+router.get("/statistics/num", verifyToken, numberOfComUnComTasks)
+router.get("/statistics/nTasksInMonth", verifyToken, numberOfTasksCompeletedPerDayInMonth)
