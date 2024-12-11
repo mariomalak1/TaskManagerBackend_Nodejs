@@ -4,10 +4,11 @@ import { hashPassword, verifyPassword } from "../Utillis/hashPassword.js";
 import { getAll_Response } from "../Utillis/defaultResponses.js";
 import { generateUserToken } from "../Utillis/userToken.js";
 import { nanoid } from "nanoid";
-import jwt  from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 export const getAllUsers = async (req, res) => {
-  return await getAll_Response(req, res, UserModel, false, true);
+  const users = await UserModel.findAll();
+  res.status(200).json({data: users});
 };
 
 export const getUserWithId = async (req, res) => {
@@ -19,7 +20,7 @@ export const getUserWithId = async (req, res) => {
 
   const payload = jwt.verify(token, process.env.SECRET_KEY);
 
-  const {id} = payload;
+  const { id } = payload;
 
   const user = await UserModel.findByPk(id, {
     attributes: {
