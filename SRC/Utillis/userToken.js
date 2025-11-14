@@ -11,7 +11,7 @@ export const generateUserToken = (email, pass) => {
 
 export const verifyToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = authHeader && authHeader.split(' ')[1]
   
     // send 401 status - unauthorized
     if (!token)

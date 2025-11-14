@@ -31,7 +31,7 @@ export const createNewUser = async (req, res, next) => {
     const {name, email, password} = req.body;
 
     if(!name || !email || !password){
-        return res.status(400).json({"error": "missed some required data"});
+        return res.status(400).json({"error": "missed some required data"})
     }
 
     const users = await UserModel.findOne({

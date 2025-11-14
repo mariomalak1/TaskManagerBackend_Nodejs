@@ -10,7 +10,7 @@ export const TaskModel = sequelize.define("Task", {
         validate: {
             len:{
                 args: [2, 40],
-                message: "task name must be between 2 and 20 characters long"
+                message: "task name must be between 2 and 20 characters long",
             }
         }
     },

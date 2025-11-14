@@ -29,7 +29,7 @@ export const UserModel = sequelize.define("User", {
         validate: {
             len:{
                 args: [8, 60], 
-                message: "Password must be between 8 and 60 characters long"
+                message: "Password must be between 8 and 60 characters long",
             }
         }
     }

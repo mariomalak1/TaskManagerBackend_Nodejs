@@ -9,7 +9,8 @@ export const sequelize = new Sequelize(
     "mario@mysql123",
     {
         host: "localhost",
-        dialect: "mysql"
+        dialect: "mysql",
+        sync: true,
     }
 );
 

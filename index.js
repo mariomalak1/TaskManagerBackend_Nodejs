@@ -13,7 +13,7 @@ const app = Express();
 
 app.use(Express.json());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 dbConnection();
 

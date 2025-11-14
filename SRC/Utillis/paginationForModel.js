@@ -19,7 +19,7 @@ export const paginate = async (request, Model, whereClues = null, defualtPage = 
     if(limit){
         limit = Number(limit);
         if(isNaN(limit)){
-            limit = defualtPageSize;
+            limit = defualtPageSize
         }
     }
 

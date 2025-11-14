@@ -16,7 +16,7 @@ const globalErrorHandle = (err, req, res, next) => {
             errorJson.stack = err.stack;
             errorJson.error = err;
         }
-        res.status(err.statusCode).send({error:{...errorJson}});
+        res.status(err.statusCode).send({error:{...errorJson}})
     }
     else{
         res.status(status).send({

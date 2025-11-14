@@ -10,7 +10,7 @@ router.post("/login/", login);
 router.post("/register/", createNewUser);
 
 router.route("/")
-        .get(getAllUsers);
+        .get(getAllUsers)
 
 router.route("/:id")
         .get(getUserWithId);

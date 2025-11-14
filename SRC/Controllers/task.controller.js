@@ -14,7 +14,7 @@ export const getAllTasksForUser = async (req, res) => {
     const tasks = await paginate(req, TaskModel, whereClue);
     const response = responseObjWithPaginator(tasks);
 
-    return res.status(200).json(response);
+    return res.status(200).json(response)
 }
 
 // @params  id -required

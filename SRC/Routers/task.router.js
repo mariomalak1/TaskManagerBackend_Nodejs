@@ -10,7 +10,7 @@ export const router = Router();
 
 router.route("/")
     .get(verifyToken, getAllTasksForUser)
-    .post(verifyToken, createTask);
+    .post(verifyToken, createTask)
     
 router.route("/:id")
     .get(verifyToken, getTaskWithId)

@@ -23,7 +23,7 @@ export const responseObjWithPaginator = (paginator, needNumOfAllRecords = false,
     }
     
     if(needMaxNumOfPage){
-        response.meta.maxPage = paginator.maxPage;
+        response.meta.maxPage = paginator.maxPage
     }
 
     return response;
