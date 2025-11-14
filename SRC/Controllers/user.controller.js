@@ -34,13 +34,13 @@ export const createNewUser = async (req, res, next) => {
         return res.status(400).json({"error": "missed some required data"});
     }
 
-    const users = await UserModel.findAll({
+    const users = await UserModel.findOne({
         where:{
             "email": email,
         }}
     );
     
-    if(users.length > 0){
+    if(users){
         return res.status(400).json({"error": "this email is used before"});
     }
 
